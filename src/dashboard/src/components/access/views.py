@@ -19,7 +19,7 @@ from agentarchives.archivesspace import ArchivesSpaceError, AuthenticationError
 # This project, alphabetical by import source
 from components import helpers
 from components.ingest.views_atk import get_atk_system_client
-from components.ingest.views_as import get_as_system_client
+from components.ingest.views_as import get_as_system_client, ArchivesSpaceConfigurationException
 import components.filesystem_ajax.views as filesystem_views
 from main.models import SIP, SIPArrange, SIPArrangeAccessMapping, ArchivesSpaceDigitalObject, DublinCore
 
@@ -53,7 +53,7 @@ def _authenticate_to_archivesspace(func):
             }
             return django.http.HttpResponseServerError(json.dumps(response),
                                                        content_type="application/json")
-        except ArchivesSpaceError:
+        except (ArchivesSpaceError, ArchivesSpaceConfigurationException):
             response = {
                 "success": False,
                 "message": "Unable to connect to ArchivesSpace server at the default location! Check administrative settings."

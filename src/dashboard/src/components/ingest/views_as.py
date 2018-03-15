@@ -16,8 +16,16 @@ from components.ingest import pair_matcher
 logger = logging.getLogger('archivematica.dashboard')
 
 
+class ArchivesSpaceConfigurationException(Exception):
+    pass
+
+
 def get_as_system_client():
     config = models.DashboardSetting.objects.get_dict('upload-archivesspace_v0.0')
+
+    if not config['host']:
+        raise ArchivesSpaceConfigurationException("ArchivesSpace host string "
+                                                  "has not been set")
 
     return ArchivesSpaceClient(
         host=config['host'],
