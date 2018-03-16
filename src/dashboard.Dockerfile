@@ -40,6 +40,9 @@ RUN set -ex \
 	&& mkdir -p $internalDirs \
 	&& chown -R archivematica:archivematica $internalDirs
 
+RUN su -l archivematica -c "npm config set proxy $HTTP_PROXY && npm config set https-proxy $HTTPS_PROXY"
+RUN su -l archivematica -c "git config --global http.proxy $HTTP_PROXY && git config --global https.proxy $HTTPS_PROXY"
+
 COPY dashboard/frontend/transfer-browser/ /src/dashboard/frontend/transfer-browser/
 RUN chown -R archivematica:archivematica /src/dashboard/frontend/transfer-browser \
 	&& su -l archivematica -c "cd /src/dashboard/frontend/transfer-browser && npm install"
